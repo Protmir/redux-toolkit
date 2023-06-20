@@ -1,23 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import TodoForm from './components/TodoForm';
+import TodoList from './components/TodoList';
+import {useSelector,useDispatch} from 'react-redux'
+import { useEffect } from 'react';
+import {fetchTodos, getTodosAsync} from './store/todoSlice'
+
 
 function App() {
+const {todos, error, status}=useSelector(store=>store.todos);
+const dispatch=useDispatch()
+
+useEffect(()=>{
+    dispatch(getTodosAsync())
+},[dispatch])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+         <TodoForm/>
+         {status==='loading'&& <h2>LOADING</h2>}
+         {error && <h2>something wrong, error:{error}</h2>}
+         <TodoList todos={todos}/>
     </div>
   );
 }
